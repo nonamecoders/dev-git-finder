@@ -26,6 +26,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+    // gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+
     // Selenium (for crawling)
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.1.3'
 

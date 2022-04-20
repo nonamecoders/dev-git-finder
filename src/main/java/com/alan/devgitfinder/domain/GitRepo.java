@@ -23,15 +23,22 @@ public class GitRepo extends BaseTimeEntity{
     @Column
     private String relative_time;
 
+    @Column(name = "repo_name")
+    private String repoName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private GitUser gitUser;
 
     @Builder
-    public GitRepo(String nickname, String relative_time,GitUser gitUser){
+    public GitRepo(String nickname, String repoName,String relative_time,GitUser gitUser){
         this.nickname = nickname;
+        this.repoName = repoName;
         this.relative_time = relative_time;
         this.gitUser = gitUser;
+
+
+
     }
 
 }

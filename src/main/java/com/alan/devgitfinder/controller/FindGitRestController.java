@@ -1,4 +1,4 @@
-package com.alan.devgitfinder;
+package com.alan.devgitfinder.controller;
 
 import com.alan.devgitfinder.domain.GitRepo;
 import com.alan.devgitfinder.service.FindGitService;
