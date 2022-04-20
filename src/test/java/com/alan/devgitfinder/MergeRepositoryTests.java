@@ -29,10 +29,10 @@ public class MergeRepositoryTests {
     @Test
     public void test() {
 
-        String name = "dave";
-        String nickname = "daveNick";
-        String repo_name = "dave-repo1";
-        String relative_time = "2 days ago";
+        String name = "DongUk Lee";
+        String nickname = "jojldu";
+        String repo_name = "blog-code";
+        String relative_time = "Updated yesterday";
 
         String repo_name1 = "dave-repo2";
         String relative_time1 = "3 days ago";
@@ -43,8 +43,8 @@ public class MergeRepositoryTests {
         String relative_time2 = "3 days ago";
 
         cycle(name,nickname,repo_name,relative_time);
-        cycle(name,nickname,repo_name1,relative_time1);
-        cycle(name2,nickname2,repo_name2,relative_time2);
+//        cycle(name,nickname,repo_name1,relative_time1);
+//        cycle(name2,nickname2,repo_name2,relative_time2);
 
     }
 

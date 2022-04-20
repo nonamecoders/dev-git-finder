@@ -1,5 +1,7 @@
 package com.alan.devgitfinder.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,9 +16,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeEntity {
 
+    @JsonIgnore
     @CreatedDate
     private LocalDateTime createDate;
 
+    @JsonIgnore
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
