@@ -25,7 +25,8 @@ public class FindGitRestController {
 
         findGitService.gitCrawl(nickname);
 
-        return "";
+        return "success";
+
     }
 
 }
