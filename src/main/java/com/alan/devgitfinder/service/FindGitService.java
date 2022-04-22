@@ -67,24 +67,23 @@ public class FindGitService {
                 c-> repoList.add(c.findElement(By.tagName("a")).getText())
         );
 
-        int size = repoList.size();
-
         List<String> timeList = new ArrayList<>();
         element1.findElements(By.tagName("relative-time")).stream()
                 .forEach(c-> timeList.add(c.getText())
                 );
 
         List<GitHubRepoDTO> gitHubRepoDTOList = new ArrayList<>();
+
+        int size = repoList.size();
+
         for(int i=0; i<size;i++){
             GitHubRepoDTO gitHubRepoDTO = new GitHubRepoDTO();
             gitHubRepoDTO.setRepoName(repoList.get(i));
             gitHubRepoDTO.setRelativeTime(timeList.get(i));
-
             gitHubRepoDTOList.add(gitHubRepoDTO);
         }
 
         mergeGithub(nameCard,gitHubRepoDTOList);
-
 
     }
 

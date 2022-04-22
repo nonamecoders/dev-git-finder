@@ -14,6 +14,10 @@ public interface GitRepoRepository extends JpaRepository<GitRepo, Long> {
     @EntityGraph("GitRepoWithGitUser")
     List<GitRepo> findAll();
 
+    @EntityGraph("GitRepoWithGitUser")
+    @Transactional
+    List<GitRepo> findByGitUser_Id(@Param(value = "user_id") Long user_id);
+
     @Transactional
     Optional<GitRepo> findByGitUser_IdAndRepoName(@Param(value = "user_id") Long user_id, @Param(value = "repo_name") String repo_name);
 }
