@@ -7,6 +7,7 @@ import com.alan.devgitfinder.repository.GitRepoRepository;
 import com.alan.devgitfinder.repository.GitUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,6 +20,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -85,6 +87,8 @@ public class FindGitService {
 
         mergeGithub(nameCard,gitHubRepoDTOList);
 
+        driver.quit();
+
     }
 
     public WebDriver createDriver() throws Exception {
@@ -133,29 +137,89 @@ public class FindGitService {
                         .build();
                 em.persist(user);
             }
+            WebDriver driver = createDriver();
 
             for(GitHubRepoDTO dto : dtoList) {
                 GitRepo repo = gitRepoRepository.findByGitUser_IdAndRepoName(user.getId(), dto.getRepoName()).orElseGet(GitRepo::new);
+                String dependency =  findDependency(nickname,dto.getRepoName(),driver);
+
 
                 if (dto.getRepoName().equals(repo.getRepoName())) {
                     repo.setRelative_time(dto.getRelativeTime());
+                    repo.setDependency(dependency);
                     em.merge(repo);
                 } else {
                     repo = GitRepo.builder()
                             .nickname(nickname)
                             .repoName(dto.getRepoName())
                             .relative_time(dto.getRelativeTime())
+                            .dependency(dependency)
                             .gitUser(user)
                             .build();
                     em.persist(repo);
                 }
             }
 
+            driver.quit();
+
         }  catch (Exception ex){
             log.error(ex.getMessage());
         }
+
         tx.commit();
 
+    }
+
+    public String findDependency (String nickname,String repoName,WebDriver driver) throws Exception{
+
+        String url = "https://github.com/" + nickname +"/" + repoName +"/blob/master/build.gradle";
+
+        driver.get(url);
+
+        try {
+
+            log.info(url);
+            StringBuilder sb = new StringBuilder();
+            List<WebElement> element1 = driver.findElements(By.tagName("tr"));
+            for(WebElement el : element1) {
+                sb.append(el.getText());
+            }
+
+            int index = sb.lastIndexOf("dependencies");
+            String dependecies = sb.substring(index);
+            int endBracketIndex = solution(dependecies);
+
+            dependecies = dependecies.substring(0,endBracketIndex);
+
+            return dependecies;
+
+        } catch (NoSuchElementException nsee) {
+            log.error(nsee.getMessage());
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+        }
+
+        return "fail";
+
+    }
+
+    public int solution (String s){
+        int answer = 0;
+        Stack<Character> stack = new Stack<>();
+
+        for(int i=0;i<s.length();i++) {
+            if(!stack.isEmpty() && s.charAt(i) == '}'){
+                stack.pop();
+                if(stack.isEmpty()) {
+                    answer = i;
+                    break;
+                }
+            } else if (s.charAt(i)=='{'){
+                stack.push(s.charAt(i));
+            }
+        }
+
+        return answer+1;
     }
 
 }
